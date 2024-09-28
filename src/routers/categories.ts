@@ -15,7 +15,7 @@ categoriesRouter.post("/", async (req, res) => {
 
 categoriesRouter.get("/", async (_req, res) => {
   const categories = await prisma.categories.findMany({
-    include: { services: true },
+    include: { subCategories: true },
   });
   res.status(200).send(categories);
 });

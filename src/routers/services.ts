@@ -7,7 +7,7 @@ servicesRouter.post("/", async (req, res) => {
   try {
     const newService = await prisma.services.create({
       data: req.body,
-      include: { category: true, subServices: true },
+      include: { subCategory: true, subServices: true },
     });
 
     res.status(200).send(newService);
@@ -18,7 +18,7 @@ servicesRouter.post("/", async (req, res) => {
 
 servicesRouter.get("/", async (_req, res) => {
   const services = await prisma.services.findMany({
-    include: { category: true, subServices: true },
+    include: { subCategory: true, subServices: true },
   });
   res.status(200).send(services);
 });
@@ -29,7 +29,7 @@ servicesRouter.get("/:id", async (req, res) => {
   const services = await prisma.services.findUnique({
     where: { id },
     include: {
-      category: true,
+      subCategory: true,
       providers: true,
       parent: true,
       subServices: true,
@@ -44,7 +44,7 @@ servicesRouter.put("/:id", async (req, res) => {
   const updatedService = await prisma.services.update({
     where: { id },
     data: req.body,
-    include: { category: true, subServices: true },
+    include: { subCategory: true, subServices: true },
   });
 
   res.status(200).send(updatedService);
