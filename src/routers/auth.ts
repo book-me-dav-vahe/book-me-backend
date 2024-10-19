@@ -39,7 +39,7 @@ authRouter.post("/register").handler(async (req) => {
 
   const token = generateAccessToken(newUser.id);
 
-  return { ...newUser, token };
+  return { token };
 });
 
 authRouter.post("/login").handler(async (req) => {
@@ -67,7 +67,7 @@ authRouter.post("/login").handler(async (req) => {
 
   const token = generateAccessToken(user.id);
 
-  return { ...user, token };
+  return { token };
 });
 
 export default authRouter;
