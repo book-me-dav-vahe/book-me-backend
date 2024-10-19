@@ -1,29 +1,24 @@
-import express from "express";
 import prisma from "../prisma";
+import { RouterBuilder } from "../services/routerBuilder";
 
-const servicesRouter = express.Router();
+const servicesRouter = new RouterBuilder("/services");
 
-servicesRouter.post("/", async (req, res) => {
-  try {
-    const newService = await prisma.services.create({
-      data: req.body,
-      include: { subCategory: true, subServices: true },
-    });
-
-    res.status(200).send(newService);
-  } catch (error) {
-    res.status(500).send({ error, message: "Failed to create new service" });
-  }
-});
-
-servicesRouter.get("/", async (_req, res) => {
-  const services = await prisma.services.findMany({
+servicesRouter.post("/").handler(async (req) => {
+  const newService = await prisma.services.create({
+    data: req.body,
     include: { subCategory: true, subServices: true },
   });
-  res.status(200).send(services);
+
+  return newService;
 });
 
-servicesRouter.get("/:id", async (req, res) => {
+servicesRouter.get("/").handler(() => {
+  return prisma.services.findMany({
+    include: { subCategory: true, subServices: true },
+  });
+});
+
+servicesRouter.get("/:id").handler(async (req) => {
   const id = Number(req.params.id);
 
   const services = await prisma.services.findUnique({
@@ -36,10 +31,10 @@ servicesRouter.get("/:id", async (req, res) => {
     },
   });
 
-  res.status(200).send(services);
+  return services;
 });
 
-servicesRouter.put("/:id", async (req, res) => {
+servicesRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedService = await prisma.services.update({
     where: { id },
@@ -47,14 +42,12 @@ servicesRouter.put("/:id", async (req, res) => {
     include: { subCategory: true, subServices: true },
   });
 
-  res.status(200).send(updatedService);
+  return updatedService;
 });
 
-servicesRouter.delete("/:id", async (req, res) => {
+servicesRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   await prisma.services.delete({ where: { id } });
-
-  res.status(200).send();
 });
 
 export default servicesRouter;

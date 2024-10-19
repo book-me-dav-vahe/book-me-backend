@@ -1,40 +1,29 @@
-import express from "express";
 import prisma from "../prisma";
+import { RouterBuilder } from "../services/routerBuilder";
 
-const categoriesRouter = express.Router();
+const categoriesRouter = new RouterBuilder("/categories");
 
-categoriesRouter.post("/", async (req, res) => {
-  try {
-    const newCategory = await prisma.categories.create({ data: req.body });
-
-    res.status(200).send(newCategory);
-  } catch (error) {
-    res.status(500).send({ error, message: "Failed to create new category" });
-  }
+categoriesRouter.post("/").handler((req) => {
+  return prisma.categories.create({ data: req.body });
 });
 
-categoriesRouter.get("/", async (_req, res) => {
-  const categories = await prisma.categories.findMany({
+categoriesRouter.get("/").handler(() => {
+  return prisma.categories.findMany({
     include: { subCategories: true },
   });
-  res.status(200).send(categories);
 });
 
-categoriesRouter.put("/:id", async (req, res) => {
+categoriesRouter.put("/:id").handler((req) => {
   const id = Number(req.params.id);
-  const updatedCategory = await prisma.categories.update({
+  return prisma.categories.update({
     where: { id },
     data: req.body,
   });
-
-  res.status(200).send(updatedCategory);
 });
 
-categoriesRouter.delete("/:id", async (req, res) => {
+categoriesRouter.delete("/:id").handler((req) => {
   const id = Number(req.params.id);
-  await prisma.categories.delete({ where: { id } });
-
-  res.status(200).send();
+  return prisma.categories.delete({ where: { id } });
 });
 
 export default categoriesRouter;

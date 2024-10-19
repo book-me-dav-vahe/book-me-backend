@@ -1,38 +1,31 @@
-import express from "express";
 import prisma from "../prisma";
+import { RouterBuilder } from "../services/routerBuilder";
 
-const locationsRouter = express.Router();
+const locationsRouter = new RouterBuilder("/locations");
 
-locationsRouter.post("/", async (req, res) => {
-  try {
-    const newLocation = await prisma.locations.create({ data: req.body });
+locationsRouter.post("/").handler(async (req) => {
+  const newLocation = await prisma.locations.create({ data: req.body });
 
-    res.status(200).send(newLocation);
-  } catch (error) {
-    res.status(500).send({ error, message: "Failed to create new location" });
-  }
+  return newLocation;
 });
 
-locationsRouter.get("/", async (_req, res) => {
-  const locations = await prisma.locations.findMany();
-  res.status(200).send(locations);
+locationsRouter.get("/").handler(() => {
+  return prisma.locations.findMany();
 });
 
-locationsRouter.put("/:id", async (req, res) => {
+locationsRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedLocation = await prisma.locations.update({
     where: { id },
     data: req.body,
   });
 
-  res.status(200).send(updatedLocation);
+  return updatedLocation;
 });
 
-locationsRouter.delete("/:id", async (req, res) => {
+locationsRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   await prisma.locations.delete({ where: { id } });
-
-  res.status(200).send();
 });
 
 export default locationsRouter;

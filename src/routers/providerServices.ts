@@ -1,31 +1,24 @@
-import express from "express";
 import prisma from "../prisma";
+import { RouterBuilder } from "../services/routerBuilder";
 
-const providerServicesRouter = express.Router();
+const providerServicesRouter = new RouterBuilder("/provider-services");
 
-providerServicesRouter.post("/", async (req, res) => {
-  try {
-    const newProviderService = await prisma.providerServices.create({
-      data: req.body,
-      include: { provider: true, service: true },
-    });
-
-    res.status(200).send(newProviderService);
-  } catch (error) {
-    res
-      .status(500)
-      .send({ error, message: "Failed to create new providerservice" });
-  }
-});
-
-providerServicesRouter.get("/", async (_req, res) => {
-  const providerServices = await prisma.providerServices.findMany({
+providerServicesRouter.post("/").handler(async (req) => {
+  const newProviderService = await prisma.providerServices.create({
+    data: req.body,
     include: { provider: true, service: true },
   });
-  res.status(200).send(providerServices);
+
+  return newProviderService;
 });
 
-providerServicesRouter.put("/:id", async (req, res) => {
+providerServicesRouter.get("/").handler(() => {
+  return prisma.providerServices.findMany({
+    include: { provider: true, service: true },
+  });
+});
+
+providerServicesRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedProviderService = await prisma.providerServices.update({
     where: { id },
@@ -33,14 +26,12 @@ providerServicesRouter.put("/:id", async (req, res) => {
     include: { provider: true, service: true },
   });
 
-  res.status(200).send(updatedProviderService);
+  return updatedProviderService;
 });
 
-providerServicesRouter.delete("/:id", async (req, res) => {
+providerServicesRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   await prisma.providerServices.delete({ where: { id } });
-
-  res.status(200).send();
 });
 
 export default providerServicesRouter;
