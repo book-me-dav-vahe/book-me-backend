@@ -11,9 +11,13 @@ subCategoriesRouter.post("/").handler(async (req) => {
   return newSubCategory;
 });
 
-subCategoriesRouter.get("/").handler(() => {
+subCategoriesRouter.get("/").handler((req) => {
+  const categoryId = req.query.categoryId;
+  const where =
+    typeof categoryId === "string" ? { categoryId: parseInt(categoryId) } : {};
+
   return prisma.subCategories.findMany({
-    where: { isDeleted: false },
+    where: { isDeleted: false, ...where },
     include: { services: true },
   });
 });
