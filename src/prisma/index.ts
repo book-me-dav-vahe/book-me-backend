@@ -2,8 +2,27 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient({
   omit: {
+    categories: {
+      isDeleted: true,
+    },
+    locations: {
+      isDeleted: true,
+    },
+    providers: {
+      isDeleted: true,
+    },
+    providerServices: {
+      isDeleted: true,
+    },
+    services: {
+      isDeleted: true,
+    },
+    subCategories: {
+      isDeleted: true,
+    },
     user: {
       password: true,
+      isDeleted: true,
     },
   },
 });

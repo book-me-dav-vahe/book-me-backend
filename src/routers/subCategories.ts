@@ -13,6 +13,7 @@ subCategoriesRouter.post("/").handler(async (req) => {
 
 subCategoriesRouter.get("/").handler(() => {
   return prisma.subCategories.findMany({
+    where: { isDeleted: false },
     include: { services: true },
   });
 });
@@ -29,7 +30,10 @@ subCategoriesRouter.put("/:id").handler(async (req) => {
 
 subCategoriesRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
-  await prisma.subCategories.delete({ where: { id } });
+  await prisma.subCategories.update({
+    where: { id },
+    data: { isDeleted: true },
+  });
 });
 
 export default subCategoriesRouter;

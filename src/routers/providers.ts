@@ -14,6 +14,7 @@ providersRouter.post("/").handler(async (req) => {
 
 providersRouter.get("/").handler(() => {
   return prisma.providers.findMany({
+    where: { isDeleted: false },
     include: { services: true, location: true },
   });
 });
@@ -31,7 +32,7 @@ providersRouter.put("/:id").handler(async (req) => {
 
 providersRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
-  await prisma.providers.delete({ where: { id } });
+  await prisma.providers.update({ where: { id }, data: { isDeleted: true } });
 });
 
 export default providersRouter;

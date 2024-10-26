@@ -21,6 +21,7 @@ usersRouter.post("/").handler(async (req) => {
 
 usersRouter.get("/").handler(() => {
   return prisma.user.findMany({
+    where: { isDeleted: false },
     include: {
       providers: {
         include: {
@@ -52,7 +53,7 @@ usersRouter.put("/:id").handler(async (req) => {
 
 usersRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
-  await prisma.user.delete({ where: { id } });
+  await prisma.user.update({ where: { id }, data: { isDeleted: true } });
 });
 
 export default usersRouter;

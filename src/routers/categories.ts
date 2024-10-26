@@ -9,6 +9,7 @@ categoriesRouter.post("/").handler((req) => {
 
 categoriesRouter.get("/").handler(() => {
   return prisma.categories.findMany({
+    where: { isDeleted: false },
     include: { subCategories: true },
   });
 });
@@ -23,7 +24,7 @@ categoriesRouter.put("/:id").handler((req) => {
 
 categoriesRouter.delete("/:id").handler((req) => {
   const id = Number(req.params.id);
-  return prisma.categories.delete({ where: { id } });
+  return prisma.categories.update({ where: { id }, data: { isDeleted: true } });
 });
 
 export default categoriesRouter;

@@ -14,6 +14,7 @@ servicesRouter.post("/").handler(async (req) => {
 
 servicesRouter.get("/").handler(() => {
   return prisma.services.findMany({
+    where: { isDeleted: false },
     include: { subCategory: true, subServices: true },
   });
 });
@@ -22,7 +23,7 @@ servicesRouter.get("/:id").handler(async (req) => {
   const id = Number(req.params.id);
 
   const services = await prisma.services.findUnique({
-    where: { id },
+    where: { id, isDeleted: false },
     include: {
       subCategory: true,
       providers: true,
@@ -47,7 +48,7 @@ servicesRouter.put("/:id").handler(async (req) => {
 
 servicesRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
-  await prisma.services.delete({ where: { id } });
+  await prisma.services.update({ where: { id }, data: { isDeleted: true } });
 });
 
 export default servicesRouter;

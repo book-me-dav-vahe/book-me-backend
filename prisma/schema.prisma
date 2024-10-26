@@ -27,6 +27,7 @@ model user {
   authProvider    String    @default("email")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  isDeleted       Boolean     @default(false)
 }
 
 model providers {
@@ -45,6 +46,7 @@ model providers {
   rating          Int
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
 }
 
 model locations {
@@ -56,6 +58,7 @@ model locations {
   providers       providers[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
 }
 
 model categories {
@@ -68,6 +71,7 @@ model categories {
   providers       providers[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
 }
 
 model subCategories {
@@ -79,6 +83,7 @@ model subCategories {
   services        services[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  isDeleted       Boolean     @default(false)
 }
 
 model services {
@@ -97,6 +102,7 @@ model services {
   durationMax     Int?
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
+  isDeleted       Boolean     @default(false)
 }
 
 model providerServices {
@@ -117,4 +123,5 @@ model providerServices {
   subServices     providerServices[]  @relation(name: "subServices")
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
+  isDeleted       Boolean     @default(false)
 }

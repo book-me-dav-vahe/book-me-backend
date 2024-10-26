@@ -10,7 +10,7 @@ locationsRouter.post("/").handler(async (req) => {
 });
 
 locationsRouter.get("/").handler(() => {
-  return prisma.locations.findMany();
+  return prisma.locations.findMany({ where: { isDeleted: false } });
 });
 
 locationsRouter.put("/:id").handler(async (req) => {
@@ -25,7 +25,7 @@ locationsRouter.put("/:id").handler(async (req) => {
 
 locationsRouter.delete("/:id").handler(async (req) => {
   const id = Number(req.params.id);
-  await prisma.locations.delete({ where: { id } });
+  await prisma.locations.update({ where: { id }, data: { isDeleted: true } });
 });
 
 export default locationsRouter;
