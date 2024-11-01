@@ -64,7 +64,7 @@ model locations {
 model categories {
   id              Int         @id @default(autoincrement())
   title           String
-  description     String
+  description     String      @default("")
   image           String?
   order           Int?
   subCategories   subCategories[]
@@ -77,7 +77,7 @@ model categories {
 model subCategories {
   id              Int         @id @default(autoincrement())
   title           String
-  description     String
+  description     String      @default("")
   category        categories  @relation(fields: [categoryId], references: [id])
   categoryId      Int
   services        services[]
@@ -89,7 +89,7 @@ model subCategories {
 model services {
   id              Int                 @id @default(autoincrement())
   title           String
-  description     String
+  description     String              @default("")
   image           String?
   order           Int?
   subCategory     subCategories       @relation(fields: [subCategoryId], references: [id])
@@ -108,7 +108,7 @@ model services {
 model providerServices {
   id              Int                 @id @default(autoincrement())
   title           String
-  description     String
+  description     String              @default("")
   image           String?
   order           Int?
   service         services?           @relation(fields: [serviceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
