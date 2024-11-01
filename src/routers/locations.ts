@@ -13,6 +13,12 @@ locationsRouter.get("/").handler(() => {
   return prisma.locations.findMany({ where: { isDeleted: false } });
 });
 
+locationsRouter.get("/:id").handler((req) => {
+  return prisma.locations.findFirstOrThrow({
+    where: { isDeleted: false, id: Number(req.params.id) },
+  });
+});
+
 locationsRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedLocation = await prisma.locations.update({

@@ -33,6 +33,20 @@ usersRouter.get("/").handler(() => {
   });
 });
 
+usersRouter.get("/:id").handler((req) => {
+  return prisma.user.findFirstOrThrow({
+    where: { isDeleted: false, id: Number(req.params.id) },
+    include: {
+      providers: {
+        include: {
+          location: true,
+          services: true,
+        },
+      },
+    },
+  });
+});
+
 usersRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedUser = await prisma.user.update({

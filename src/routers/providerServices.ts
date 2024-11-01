@@ -19,6 +19,13 @@ providerServicesRouter.get("/").handler(() => {
   });
 });
 
+providerServicesRouter.get("/:id").handler((req) => {
+  return prisma.providerServices.findFirstOrThrow({
+    where: { isDeleted: false, id: Number(req.params.id) },
+    include: { provider: true, service: true },
+  });
+});
+
 providerServicesRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedProviderService = await prisma.providerServices.update({

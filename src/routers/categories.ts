@@ -14,6 +14,13 @@ categoriesRouter.get("/").handler(() => {
   });
 });
 
+categoriesRouter.get("/:id").handler((req) => {
+  return prisma.categories.findFirstOrThrow({
+    where: { isDeleted: false, id: Number(req.params.id) },
+    include: { subCategories: true },
+  });
+});
+
 categoriesRouter.put("/:id").handler((req) => {
   const id = Number(req.params.id);
   return prisma.categories.update({

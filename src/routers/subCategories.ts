@@ -22,6 +22,13 @@ subCategoriesRouter.get("/").handler((req) => {
   });
 });
 
+subCategoriesRouter.get("/:id").handler((req) => {
+  return prisma.subCategories.findFirstOrThrow({
+    where: { isDeleted: false, id: Number(req.params.id) },
+    include: { services: true, category: true },
+  });
+});
+
 subCategoriesRouter.put("/:id").handler(async (req) => {
   const id = Number(req.params.id);
   const updatedSubCategory = await prisma.subCategories.update({
